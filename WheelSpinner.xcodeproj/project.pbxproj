@@ -7,64 +7,17 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		4C7469F42E0D059B00C5D4D1 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C7469D52E0D050A00C5D4D1 /* WidgetKit.framework */; };
-		4C7469F52E0D059B00C5D4D1 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C7469D72E0D050A00C5D4D1 /* SwiftUI.framework */; };
-		4C746A042E0D059D00C5D4D1 /* AppLogoWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 4C7469F32E0D059B00C5D4D1 /* AppLogoWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		F13BC8012E0D1D7B008F2A77 /* ConfettiSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = F13BC8002E0D1D7B008F2A77 /* ConfettiSwiftUI */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXContainerItemProxy section */
-		4C746A022E0D059D00C5D4D1 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 4C1C03172E0CD46C0029534D /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 4C7469F22E0D059B00C5D4D1;
-			remoteInfo = AppLogoWidgetExtension;
-		};
-/* End PBXContainerItemProxy section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		4C7469EA2E0D050C00C5D4D1 /* Embed Foundation Extensions */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 13;
-			files = (
-				4C746A042E0D059D00C5D4D1 /* AppLogoWidgetExtension.appex in Embed Foundation Extensions */,
-			);
-			name = "Embed Foundation Extensions";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		4C1C031F2E0CD46D0029534D /* WheelSpinner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WheelSpinner.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		4C7469D52E0D050A00C5D4D1 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
-		4C7469D72E0D050A00C5D4D1 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
-		4C7469F32E0D059B00C5D4D1 /* AppLogoWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = AppLogoWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
-
-/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		4C746A052E0D059D00C5D4D1 /* Exceptions for "AppLogoWidget" folder in "AppLogoWidgetExtension" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Info.plist,
-			);
-			target = 4C7469F22E0D059B00C5D4D1 /* AppLogoWidgetExtension */;
-		};
-/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		4C1C03212E0CD46D0029534D /* WheelSpinner */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = WheelSpinner;
-			sourceTree = "<group>";
-		};
-		4C7469F62E0D059B00C5D4D1 /* AppLogoWidget */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				4C746A052E0D059D00C5D4D1 /* Exceptions for "AppLogoWidget" folder in "AppLogoWidgetExtension" target */,
-			);
-			path = AppLogoWidget;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -74,15 +27,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		4C7469F02E0D059B00C5D4D1 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				4C7469F52E0D059B00C5D4D1 /* SwiftUI.framework in Frameworks */,
-				4C7469F42E0D059B00C5D4D1 /* WidgetKit.framework in Frameworks */,
+				F13BC8012E0D1D7B008F2A77 /* ConfettiSwiftUI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -93,8 +38,6 @@
 			isa = PBXGroup;
 			children = (
 				4C1C03212E0CD46D0029534D /* WheelSpinner */,
-				4C7469F62E0D059B00C5D4D1 /* AppLogoWidget */,
-				4C7469D42E0D050A00C5D4D1 /* Frameworks */,
 				4C1C03202E0CD46D0029534D /* Products */,
 			);
 			sourceTree = "<group>";
@@ -103,18 +46,8 @@
 			isa = PBXGroup;
 			children = (
 				4C1C031F2E0CD46D0029534D /* WheelSpinner.app */,
-				4C7469F32E0D059B00C5D4D1 /* AppLogoWidgetExtension.appex */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		4C7469D42E0D050A00C5D4D1 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				4C7469D52E0D050A00C5D4D1 /* WidgetKit.framework */,
-				4C7469D72E0D050A00C5D4D1 /* SwiftUI.framework */,
-			);
-			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -127,44 +60,21 @@
 				4C1C031B2E0CD46C0029534D /* Sources */,
 				4C1C031C2E0CD46C0029534D /* Frameworks */,
 				4C1C031D2E0CD46C0029534D /* Resources */,
-				4C7469EA2E0D050C00C5D4D1 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				4C746A032E0D059D00C5D4D1 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				4C1C03212E0CD46D0029534D /* WheelSpinner */,
 			);
 			name = WheelSpinner;
 			packageProductDependencies = (
+				F13BC8002E0D1D7B008F2A77 /* ConfettiSwiftUI */,
 			);
 			productName = WheelSpinner;
 			productReference = 4C1C031F2E0CD46D0029534D /* WheelSpinner.app */;
 			productType = "com.apple.product-type.application";
-		};
-		4C7469F22E0D059B00C5D4D1 /* AppLogoWidgetExtension */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 4C746A062E0D059D00C5D4D1 /* Build configuration list for PBXNativeTarget "AppLogoWidgetExtension" */;
-			buildPhases = (
-				4C7469EF2E0D059B00C5D4D1 /* Sources */,
-				4C7469F02E0D059B00C5D4D1 /* Frameworks */,
-				4C7469F12E0D059B00C5D4D1 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			fileSystemSynchronizedGroups = (
-				4C7469F62E0D059B00C5D4D1 /* AppLogoWidget */,
-			);
-			name = AppLogoWidgetExtension;
-			packageProductDependencies = (
-			);
-			productName = AppLogoWidgetExtension;
-			productReference = 4C7469F32E0D059B00C5D4D1 /* AppLogoWidgetExtension.appex */;
-			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -179,9 +89,6 @@
 					4C1C031E2E0CD46C0029534D = {
 						CreatedOnToolsVersion = 16.4;
 					};
-					4C7469F22E0D059B00C5D4D1 = {
-						CreatedOnToolsVersion = 16.4;
-					};
 				};
 			};
 			buildConfigurationList = 4C1C031A2E0CD46C0029534D /* Build configuration list for PBXProject "WheelSpinner" */;
@@ -193,26 +100,21 @@
 			);
 			mainGroup = 4C1C03162E0CD46C0029534D;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				F13BC7FF2E0D1D7B008F2A77 /* XCRemoteSwiftPackageReference "ConfettiSwiftUI" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 4C1C03202E0CD46D0029534D /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
 				4C1C031E2E0CD46C0029534D /* WheelSpinner */,
-				4C7469F22E0D059B00C5D4D1 /* AppLogoWidgetExtension */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		4C1C031D2E0CD46C0029534D /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		4C7469F12E0D059B00C5D4D1 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -229,22 +131,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		4C7469EF2E0D059B00C5D4D1 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		4C746A032E0D059D00C5D4D1 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 4C7469F22E0D059B00C5D4D1 /* AppLogoWidgetExtension */;
-			targetProxy = 4C746A022E0D059D00C5D4D1 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		4C1C03282E0CD46F0029534D /* Debug */ = {
@@ -383,6 +270,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -411,6 +299,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -418,60 +307,6 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ftctpi.WheelSpinner;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Release;
-		};
-		4C746A072E0D059D00C5D4D1 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 3N3884G779;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = AppLogoWidget/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = AppLogoWidget;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@executable_path/../../Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.ftctpi.WheelSpinner.AppLogoWidget;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		4C746A082E0D059D00C5D4D1 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 3N3884G779;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = AppLogoWidget/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = AppLogoWidget;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@executable_path/../../Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.ftctpi.WheelSpinner.AppLogoWidget;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -499,16 +334,26 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		4C746A062E0D059D00C5D4D1 /* Build configuration list for PBXNativeTarget "AppLogoWidgetExtension" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				4C746A072E0D059D00C5D4D1 /* Debug */,
-				4C746A082E0D059D00C5D4D1 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		F13BC7FF2E0D1D7B008F2A77 /* XCRemoteSwiftPackageReference "ConfettiSwiftUI" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/simibac/ConfettiSwiftUI";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.3;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		F13BC8002E0D1D7B008F2A77 /* ConfettiSwiftUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F13BC7FF2E0D1D7B008F2A77 /* XCRemoteSwiftPackageReference "ConfettiSwiftUI" */;
+			productName = ConfettiSwiftUI;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 4C1C03172E0CD46C0029534D /* Project object */;
 }

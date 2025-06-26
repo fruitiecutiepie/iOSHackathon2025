@@ -181,45 +181,49 @@ struct SpinnerWheelView: View {
   var body: some View {
     VStack(spacing: 20) {
       // Result displayed above the wheel
+        Text("What to Eat Tonight?")
+          .padding(.top, 8)
+          .font(.system(size: 30, weight: .bold))
+        
+        Text("🎯Give it a spin and let fate decide")
+          .padding(.top, 0)
+        Text("")
+          .padding(.top, 20)
+
       Group {
-        if let result = selection {
-          Text(result)
-            .font(.title)
-            .bold()
-            .padding(.horizontal, 16)
-            .padding(.vertical, 8)
-            .background(Color.white.opacity(0.8))
-            .cornerRadius(12)
-            .shadow(radius: 4)
-        } else {
+        
+          if let result = selection {
+            Text(result)
+              .font(.system(size: 40, weight: .bold))
+              .padding(.horizontal, 32)
+              .padding(.vertical, 20)
+              .background(Color.white.opacity(0.95))
+              .cornerRadius(16)
+              .shadow(color: .gray.opacity(0.5), radius: 6, x: 0, y: 4)
+              .transition(.scale) // optional: animate appearance
+          } else {
           Text("Spin the Wheel")
             .font(.headline)
             .foregroundColor(.secondary)
         }
       }
       
-      ZStack {
-        // Gradient card background
-        RoundedRectangle(cornerRadius: 20)
-          .fill(
-            LinearGradient(
-              gradient: Gradient(colors: [Color.blue.opacity(0.3), Color.purple.opacity(0.3)]),
-              startPoint: .topLeading,
-              endPoint: .bottomTrailing
-            )
-          )
-          .frame(width: 340, height: 340)
-          .shadow(radius: 5)
-        
-        // Wheel segments
-        Wheel(choices: choices)
-          .rotationEffect(.degrees(spinAngle))
-          .animation(.easeOut(duration: 3), value: spinAngle)
-          .frame(width: 300, height: 300)
-        
-        // Arrow indicator
-        Arrow()
-      }
+        ZStack {
+            // White circular board background
+            Circle()
+                .fill(Color.white)
+                .frame(width: 320, height: 320) // Slightly larger than the wheel
+                .shadow(radius: 4)
+            
+            Wheel(choices: choices)
+                .frame(width: 300, height: 300)
+                .fixedSize() // Ensures layout stays consistent
+                .rotationEffect(.degrees(spinAngle), anchor: .center)
+                .animation(.easeOut(duration: 3), value: spinAngle)
+                .drawingGroup()
+            
+            Arrow()
+        }
       
       // Spin button
       Button(action: spinWheel) {
@@ -286,29 +290,30 @@ struct Wheel: View {
           )
         }
         .fill(
-          AngularGradient(
-            gradient: Gradient(colors: [
-              Color(hue: Double(i) / Double(choices.count), saturation: 0.7, brightness: 1.0),
-              Color(hue: Double(i) / Double(choices.count), saturation: 0.8, brightness: 0.8)
-            ]),
-            center: .center,
-            startAngle: .radians(step * Double(i) - .pi/2),
-            endAngle: .radians(step * Double(i+1) - .pi/2)
-          )
-        )
+              AngularGradient(
+                gradient: Gradient(colors: [
+                  [.mint.opacity(0.3), .blue.opacity(0.3)],
+                  [.orange.opacity(0.3), .pink.opacity(0.3)],
+                  [.purple.opacity(0.3), .indigo.opacity(0.3)],
+                  [.teal.opacity(0.3), .yellow.opacity(0.3)],
+                  [.cyan.opacity(0.3), .green.opacity(0.3)]
+                ][i % 5]), // repeat every 5 segments
+                center: .center,
+                startAngle: .radians(step * Double(i) - .pi/2),
+                endAngle: .radians(step * Double(i + 1) - .pi/2)
+              )
+            )
 
         
           Text(choices[i])
-              .font(.caption2.weight(.bold))
-              .font(.caption)
-              
-
-               
+              .font(.system(size: 18, weight: .bold))
+          
               .rotationEffect(.radians(step * (Double(i) + 0.5) - .pi / 2)) // Match wheel arc
               .position(
                   x: center.x + cos(step * (Double(i) + 0.5) - .pi/2) * (r * 0.7),
                   y: center.y + sin(step * (Double(i) + 0.5) - .pi/2) * (r * 0.7)
               )
+        
       }
     }
   }

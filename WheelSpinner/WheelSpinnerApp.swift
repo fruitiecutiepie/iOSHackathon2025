@@ -21,42 +21,93 @@ struct WheelSpinnerApp: App {
   ChoiceListView()
 }
 
+struct ChoiceItem: Identifiable, Equatable {
+  let id = UUID()
+  var text: String
+  var isChecked: Bool
+}
 
 struct ChoiceListView: View {
-  @State private var choices: [String] = ["Option 1", "Option 2", "Option 3"]
+  @State private var choices: [ChoiceItem] = [
+    ChoiceItem(text: "Preset A", isChecked: false),
+    ChoiceItem(text: "Preset B", isChecked: false),
+    ChoiceItem(text: "Preset C", isChecked: false)
+  ]
+  @State private var searchText: String = ""
+  
   var body: some View {
     NavigationView {
-      VStack {
-        List {
-          ForEach(choices.indices, id: \.self) { idx in
-            TextField("Choice \(idx+1)", text: $choices[idx])
-          }
-          .onDelete(perform: delete)
-        }
-        HStack {
-          Button(action: add) {
+      VStack(spacing: 0) {
+        TextField("Search...", text: $searchText)
+          .textFieldStyle(RoundedBorderTextFieldStyle())
+          .padding([.horizontal, .top])
+        
+        Button(action: addChoice) {
+          HStack {
+            Image(systemName: "plus.circle")
             Text("Add Choice")
           }
-          Spacer()
-          NavigationLink(destination: SpinnerView(choices: choices)) {
+          .frame(maxWidth: .infinity, alignment: .leading)
+          .padding(.horizontal)
+          .padding(.vertical, 10)
+        }
+        
+        List {
+          ForEach(Array(choices.enumerated()), id: \ .element.id) { idx, choice in
+            if searchText.isEmpty || choice.text.lowercased().contains(searchText.lowercased()) {
+              HStack {
+                Button {
+                  toggleAndMove(at: idx)
+                } label: {
+                  Image(systemName: choice.isChecked ? "checkmark.square.fill" : "square")
+                }
+                .buttonStyle(PlainButtonStyle())
+                
+                TextField("Choice", text: $choices[idx].text)
+                  .onSubmit {
+                    moveToTop(at: idx)
+                  }
+              }
+            }
+          }
+        }
+      }
+      .navigationTitle("Choices")
+      .toolbar {
+        ToolbarItem(placement: .bottomBar) {
+          NavigationLink(destination: SpinnerView(choices: choices.map { $0.text })) {
             Text("Spin").bold()
           }
           .disabled(choices.isEmpty)
         }
-        .padding()
       }
-      .navigationTitle("Choices")
     }
   }
   
-  func add() { choices.append("") }
-  func delete(at offsets: IndexSet) { choices.remove(atOffsets: offsets) }
+  private func addChoice() {
+    let new = ChoiceItem(text: "", isChecked: false)
+    choices.insert(new, at: 0)
+  }
+  
+  private func toggleAndMove(at idx: Int) {
+    var item = choices[idx]
+    item.isChecked.toggle()
+    choices.remove(at: idx)
+    choices.insert(item, at: 0)
+  }
+  
+  private func moveToTop(at idx: Int) {
+    let item = choices[idx]
+    choices.remove(at: idx)
+    choices.insert(item, at: 0)
+  }
 }
 
 struct SpinnerView: View {
   let choices: [String]
   @State private var spinAngle: Double = 0
   @State private var selection: String? = nil
+  @State private var hasSpunOnAppear = false
   @Environment(\.presentationMode) private var presentation
   
   var body: some View {
@@ -68,14 +119,14 @@ struct SpinnerView: View {
         Arrow()
       }
       .frame(width: 300, height: 300)
+      .onAppear {
+        guard !hasSpunOnAppear else { return }
+        hasSpunOnAppear = true
+        spinWheel()
+      }
       
       Button("Spin") {
-        selection = nil
-        let extra = Double.random(in: 3...6) * 360
-        spinAngle += extra
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-          computeSelection()
-        }
+        spinWheel()
       }
       .padding()
       
@@ -87,6 +138,15 @@ struct SpinnerView: View {
       }
     }
     .navigationBarTitle("Spinner", displayMode: .inline)
+  }
+  
+  private func spinWheel() {
+    selection = nil
+    let extra = Double.random(in: 3...6) * 360
+    spinAngle += extra
+    DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+      computeSelection()
+    }
   }
   
   private func computeSelection() {
@@ -105,7 +165,7 @@ struct WheelView: View {
       let center = CGPoint(x: g.size.width/2, y: g.size.height/2)
       let step = 2 * .pi / Double(choices.count)
       
-      ForEach(0..<choices.count, id: \.self) { i in
+      ForEach(0..<choices.count, id: \ .self) { i in
         Path { path in
           path.move(to: center)
           path.addArc(

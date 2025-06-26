@@ -285,12 +285,13 @@ struct Wheel: View {
         }
         .fill(Color(hue: Double(i) / Double(choices.count), saturation: 0.7, brightness: 0.9))
         
-        Text(choices[i])
-          .font(.caption)
-          .position(
-            x: center.x + cos(step * (Double(i) + 0.5) - .pi/2) * (r * 0.7),
-            y: center.y + sin(step * (Double(i) + 0.5) - .pi/2) * (r * 0.7)
-          )
+          Text(choices[i])
+              .font(.caption)
+              .rotationEffect(.radians(step * (Double(i) + 0.5) - .pi / 2)) // Match wheel arc
+              .position(
+                  x: center.x + cos(step * (Double(i) + 0.5) - .pi/2) * (r * 0.7),
+                  y: center.y + sin(step * (Double(i) + 0.5) - .pi/2) * (r * 0.7)
+              )
       }
     }
   }

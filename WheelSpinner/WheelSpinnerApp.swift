@@ -285,14 +285,30 @@ struct Wheel: View {
             clockwise: false
           )
         }
-        .fill(Color(hue: Double(i) / Double(choices.count), saturation: 0.7, brightness: 0.9))
-        
-        Text(choices[i])
-          .font(.caption)
-          .position(
-            x: center.x + cos(step * (Double(i) + 0.5) - .pi/2) * (r * 0.7),
-            y: center.y + sin(step * (Double(i) + 0.5) - .pi/2) * (r * 0.7)
+        .fill(
+          AngularGradient(
+            gradient: Gradient(colors: [
+              Color(hue: Double(i) / Double(choices.count), saturation: 0.7, brightness: 1.0),
+              Color(hue: Double(i) / Double(choices.count), saturation: 0.8, brightness: 0.8)
+            ]),
+            center: .center,
+            startAngle: .radians(step * Double(i) - .pi/2),
+            endAngle: .radians(step * Double(i+1) - .pi/2)
           )
+        )
+
+        
+          Text(choices[i])
+              .font(.caption2.weight(.bold))
+              .font(.caption)
+              
+
+               
+              .rotationEffect(.radians(step * (Double(i) + 0.5) - .pi / 2)) // Match wheel arc
+              .position(
+                  x: center.x + cos(step * (Double(i) + 0.5) - .pi/2) * (r * 0.7),
+                  y: center.y + sin(step * (Double(i) + 0.5) - .pi/2) * (r * 0.7)
+              )
       }
     }
   }

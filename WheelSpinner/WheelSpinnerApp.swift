@@ -1,10 +1,23 @@
 import SwiftUI
+import UIKit
 
 @main
 struct WheelSpinnerApp: App {
+  @State private var showSplash = true
   var body: some Scene {
     WindowGroup {
-      ChoiceListView()
+      if showSplash {
+        SplashScreenView()
+          .onAppear {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+              withAnimation {
+                showSplash = false
+              }
+            }
+          }
+      } else {
+        ChoiceListView()
+      }
     }
   }
 }
@@ -32,18 +45,27 @@ class ChoiceListViewModel: ObservableObject {
     ChoiceItem(text: "Sandwich", isChecked: false),
     ChoiceItem(text: "Noodles", isChecked: false),
   ]
-  let minChoices = 2
-  let maxChoices = 10
   
-  var canAdd: Bool { choices.count < maxChoices }
+  // Configuration for how many checked items are required/allowed when spinning
+  @Published var minSelectable = 2
+  @Published var maxSelectable = 10
+
+  var canAdd: Bool { true }
+
+  // Number of checked items (selected for spinning)
+  var checkedCount: Int { choices.filter { $0.isChecked }.count }
+  
+  // The wheel can spin when the checked count is within the configured bounds
   var canSpin: Bool {
-    choices.count >= minChoices && choices.allSatisfy {
+    let checkedItems = choices.filter { $0.isChecked }
+    let count = checkedItems.count
+    guard count >= minSelectable && count <= maxSelectable else { return false }
+    return checkedItems.allSatisfy {
       !$0.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
   }
   
   func addChoice() -> UUID? {
-    guard canAdd else { return nil }
     let new = ChoiceItem(text: "", isChecked: true)
     choices.insert(new, at: 0)
     return new.id
@@ -75,12 +97,23 @@ class ChoiceListViewModel: ObservableObject {
 struct ChoiceListView: View {
   @StateObject private var viewModel = ChoiceListViewModel()
   @State private var searchText: String = ""
-  @FocusState private var focusedItemId: UUID?
-  
+
+  enum FocusedField: Hashable {
+    case search
+    case choice(id: UUID)
+  }
+  @FocusState private var focusedField: FocusedField?
+
   private var filteredIndices: [Int] {
     viewModel.choices.indices.filter { idx in
       let text = viewModel.choices[idx].text.lowercased()
       return searchText.isEmpty || text.contains(searchText.lowercased())
+    }
+  }
+  
+  private func addChoice() {
+    if let id = viewModel.addChoice() {
+      focusedField = .choice(id: id)
     }
   }
   
@@ -90,6 +123,7 @@ struct ChoiceListView: View {
         TextField("Search...", text: $searchText)
           .textFieldStyle(RoundedBorderTextFieldStyle())
           .padding([.horizontal, .top])
+          .focused($focusedField, equals: .search)
         
         Button(action: addChoice) {
           HStack {
@@ -102,6 +136,30 @@ struct ChoiceListView: View {
         }
         .disabled(!viewModel.canAdd)
         .opacity(viewModel.canAdd ? 1 : 0.5)
+        
+        // Configuration steppers for min/max selectable items
+        // VStack(spacing: 4) {
+        //   Stepper(value: $viewModel.minSelectable, in: 1...viewModel.maxSelectable) {
+        //     HStack {
+        //       Text("Min selections")
+        //       Spacer()
+        //       Text("\(viewModel.minSelectable)")
+        //     }
+        //   }
+        //   .padding(.horizontal)
+
+        //   Stepper(
+        //     value: $viewModel.maxSelectable,
+        //     in: viewModel.minSelectable...100
+        //   ) {
+        //     HStack {
+        //       Text("Max selections")
+        //       Spacer()
+        //       Text("\(viewModel.maxSelectable)")
+        //     }
+        //   }
+        //   .padding([.horizontal, .bottom])
+        // }
         
         if viewModel.choices.isEmpty {
           Spacer()
@@ -123,7 +181,7 @@ struct ChoiceListView: View {
                 .buttonStyle(PlainButtonStyle())
                 
                 TextField("Choice", text: $viewModel.choices[idx].text)
-                  .focused($focusedItemId, equals: viewModel.choices[idx].id)
+                  .focused($focusedField, equals: .choice(id: viewModel.choices[idx].id))
                   .onSubmit { viewModel.moveToTop(at: idx) }
                   .overlay(
                     RoundedRectangle(cornerRadius: 4)
@@ -143,11 +201,14 @@ struct ChoiceListView: View {
         }
         
         if !viewModel.canSpin {
-          Text("Enter at least \(viewModel.minChoices) non-empty choices to spin.")
+          Text("Select between \(viewModel.minSelectable) and \(viewModel.maxSelectable) non-empty checked choices to spin.  Current: \(viewModel.checkedCount)")
             .font(.footnote)
             .foregroundColor(.gray)
             .padding(.bottom, 8)
         }
+      }
+      .onTapGesture {
+        focusedField = nil
       }
       .navigationTitle("What to Eat?")
       .toolbar {
@@ -161,12 +222,6 @@ struct ChoiceListView: View {
           .opacity(viewModel.canSpin ? 1 : 0.5)
         }
       }
-    }
-  }
-  
-  private func addChoice() {
-    if let newId = viewModel.addChoice() {
-      focusedItemId = newId
     }
   }
 }

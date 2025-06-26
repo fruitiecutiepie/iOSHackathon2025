@@ -73,6 +73,10 @@ class ChoiceListViewModel: ObservableObject {
   }
 }
 
+
+
+// LIST ITEM
+
 struct ChoiceListView: View {
   @StateObject private var viewModel = ChoiceListViewModel()
   @State private var searchText: String = ""
@@ -85,62 +89,127 @@ struct ChoiceListView: View {
     }
   }
   
-  var body: some View {
-    NavigationView {
-      VStack(spacing: 0) {
-        TextField("Search...", text: $searchText)
-          .textFieldStyle(RoundedBorderTextFieldStyle())
-          .padding([.horizontal, .top])
-        
-        Button(action: addChoice) {
-          HStack {
-            Image(systemName: "plus.circle")
-            Text("Add Choice")
-          }
-          .frame(maxWidth: .infinity, alignment: .leading)
-          .padding(.horizontal)
-          .padding(.vertical, 10)
-        }
-        .disabled(!viewModel.canAdd)
-        .opacity(viewModel.canAdd ? 1 : 0.5)
-        
-        if viewModel.choices.isEmpty {
-          Spacer()
-          Text("No choices available. Please add some.")
-            .foregroundColor(.gray)
-            .padding()
-        } else {
-          List {
-            // 2) Always returns a HStack → no buildExpression error
-            ForEach(filteredIndices, id: \.self) { idx in
-              HStack {
-                Button {
-                  viewModel.toggleAndMove(at: idx)
-                } label: {
-                  Image(systemName: viewModel.choices[idx].isChecked
-                        ? "checkmark.square.fill"
-                        : "square")
+    var body: some View {
+        NavigationView {
+                VStack(spacing: 0) {
+                    Text("Choose your Cravings")
+                        .font(.system(size: 30, weight: .bold)) // Customize font, size
+                        .foregroundColor(.primary)
+                        .frame(maxWidth: .infinity)
+                        .multilineTextAlignment(.center)
+                        .padding(.top, 24)
+                        .padding(.bottom, 12)
+                    
+                    Text("Trust the wheel. It has great taste.")
+                        .font(.system(size: 12, weight: .bold)).italic() // Customize font, size
+                        .foregroundColor(.primary)
+                        .frame(maxWidth: .infinity)
+                        .multilineTextAlignment(.center)
+                        .padding(.top, -2)
+                        .padding(.bottom, 12)
+                    
+                    Button(action: addChoice) {
+                        HStack {
+                            Image(systemName: "plus.circle")
+                            Text("Add Choice")
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.horizontal)
+                        .padding(.vertical, 10)
+                        .padding(.bottom, 10)
+                    }
+                    .disabled(!viewModel.canAdd)
+                    .opacity(viewModel.canAdd ? 1 : 0.5)
+                    
+                    if viewModel.choices.isEmpty {
+                        Spacer()
+                        Text("No choices available. Please add some.")
+                            .foregroundColor(.gray)
+                            .padding()
+                    } else {
+                        List {
+                            // 2) Always returns a HStack → no buildExpression error
+                            ForEach(filteredIndices, id: \.self) { idx in
+                                HStack {
+                                    Button {
+                                        viewModel.toggleAndMove(at: idx)
+                                    } label: {
+                                        Image(systemName: viewModel.choices[idx].isChecked
+                                              ? "checkmark.square.fill"
+                                              : "square")
+                                        .font(.system(size: 26))
+                                        .foregroundColor(.blue)
+                                    }
+                                    .buttonStyle(PlainButtonStyle())
+                                    
+                                    TextField("Choice", text: $viewModel.choices[idx].text)
+                                        .focused($focusedItemId, equals: viewModel.choices[idx].id)
+                                        .onSubmit { viewModel.moveToTop(at: idx) }
+                                        .padding(10)
+                                        .fontWeight(.semibold)
+                                        .background(Color.white.opacity(0.6))
+                                        .cornerRadius(6)
+                                }
+                                .listRowSeparator(.hidden)
+                                //.listRowBackground(Color.clear) // clear bg for each row
+                                .padding(.vertical, -10)
+                                .padding()
+                                .background(
+                                    LinearGradient(
+                                        gradient: Gradient(colors: gradientColor(for: idx)),
+                                        startPoint: .topLeading,
+                                        endPoint: .bottomTrailing
+                                    )
+                                )
+                                .cornerRadius(12)
+                                // .shadow(color: .gray.opacity(0.3), radius: 3, x: 0, y: 1)
+                                .padding(.horizontal,10)
+                                .padding(.vertical, -4.8)
+                            }
+                            .onDelete(perform: viewModel.delete)
+                        }
+                        .listStyle(.plain)
+                        
+                        
+                    }
+                    
+                    if !viewModel.canSpin {
+                        Text("Enter at least \(viewModel.minChoices) non-empty choices to spin.")
+                            .font(.footnote)
+                            .foregroundColor(.gray)
+                            .padding(.bottom, 8)
+                    }
                 }
-                .buttonStyle(PlainButtonStyle())
+                .background(Color.white.opacity(0.85)) // optional, to slightly cover images behind for readability
                 
-                TextField("Choice", text: $viewModel.choices[idx].text)
-                  .focused($focusedItemId, equals: viewModel.choices[idx].id)
-                  .onSubmit { viewModel.moveToTop(at: idx) }
-                  .overlay(
-                    RoundedRectangle(cornerRadius: 4)
-                      .stroke(
-                        viewModel.choices[idx].text
-                          .trimmingCharacters(in: .whitespacesAndNewlines)
-                          .isEmpty
-                        ? Color.red
-                        : Color.clear,
-                        lineWidth: 1
-                      )
-                  )
-              }
-            }
-            .onDelete(perform: viewModel.delete)
-          }
+                // .navigationTitle("What to Eat?")
+                .background(Color.white)
+                .toolbar {
+                    ToolbarItem(placement: .bottomBar) {
+                        NavigationLink(destination: SpinnerWheelView(choices: viewModel.choices.map { $0.text })) {
+                            Text("Spin the Wheel")
+                                .font(.system(size: 22, weight: .bold))
+                                .foregroundColor(.white)
+                                .frame(maxWidth: .infinity)
+                                .frame(height: 16)
+                                .padding(20)
+                                .padding(.horizontal,40)
+                                .background(
+                                    LinearGradient(
+                                        gradient: Gradient(colors: [Color.blue.opacity(1), Color.blue.opacity(1.5), Color.blue.opacity(1)]),
+                                        startPoint: .leading,
+                                        endPoint: .trailing
+                                    )
+                                )
+                                .cornerRadius(100)
+                                .padding(.horizontal)
+                        }
+                        .disabled(!viewModel.canSpin)
+                        .opacity(viewModel.canSpin ? 1 : 0.9)
+                        .padding(.top, 25)
+                    }
+                }
+            
         }
         
         if !viewModel.canSpin {
@@ -163,14 +232,27 @@ struct ChoiceListView: View {
         }
       }
     }
-  }
-  
+    private func gradientColor(for index: Int) -> [Color] {
+      let gradients: [[Color]] = [
+        [.mint.opacity(0.3), .blue.opacity(0.3)],
+        [.orange.opacity(0.3), .pink.opacity(0.3)],
+        [.purple.opacity(0.3), .indigo.opacity(0.3)],
+        [.teal.opacity(0.3), .yellow.opacity(0.3)],
+        [.cyan.opacity(0.3), .green.opacity(0.3)]
+      ]
+      return gradients[index % gradients.count]
+    }
+
   private func addChoice() {
     if let newId = viewModel.addChoice() {
       focusedItemId = newId
     }
   }
+
 }
+
+
+// SPIN WHEEL SCREEN
 
 struct SpinnerWheelView: View {
   let choices: [String]

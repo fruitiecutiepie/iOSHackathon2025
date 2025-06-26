@@ -152,7 +152,9 @@ struct ChoiceListView: View {
       .navigationTitle("What to Eat?")
       .toolbar {
         ToolbarItem(placement: .bottomBar) {
-          NavigationLink(destination: SpinnerWheelView(choices: viewModel.choices.map { $0.text })) {
+          NavigationLink(destination: SpinnerWheelView(
+            choices: viewModel.choices.filter { $0.isChecked }.map { $0.text }
+          )) {
             Text("Spin").bold()
           }
           .disabled(!viewModel.canSpin)

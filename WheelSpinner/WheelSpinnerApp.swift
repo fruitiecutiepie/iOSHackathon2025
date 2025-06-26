@@ -152,7 +152,7 @@ struct ChoiceListView: View {
       .navigationTitle("What to Eat?")
       .toolbar {
         ToolbarItem(placement: .bottomBar) {
-          NavigationLink(destination: SpinnerView(choices: viewModel.choices.map { $0.text })) {
+          NavigationLink(destination: SpinnerWheelView(choices: viewModel.choices.map { $0.text })) {
             Text("Spin").bold()
           }
           .disabled(!viewModel.canSpin)
@@ -169,61 +169,78 @@ struct ChoiceListView: View {
   }
 }
 
-struct SpinnerView: View {
+struct SpinnerWheelView: View {
   let choices: [String]
   @State private var spinAngle: Double = 0
   @State private var selection: String? = nil
   @State private var hasSpunOnAppear = false
-  @Environment(\.presentationMode) private var presentation
   private let feedback = UIImpactFeedbackGenerator(style: .light)
   
   var body: some View {
-    VStack {
-      // Gradient card background
-      RoundedRectangle(cornerRadius: 20)
-        .fill(
-          LinearGradient(
-            gradient: Gradient(colors: [Color.blue.opacity(0.3), Color.purple.opacity(0.3)]),
-            startPoint: .topLeading,
-            endPoint: .bottomTrailing
-          )
-        )
-        .frame(width: 340, height: 340)
-        .shadow(radius: 5)
+    VStack(spacing: 20) {
+      // Result displayed above the wheel
+      Group {
+        if let result = selection {
+          Text(result)
+            .font(.title)
+            .bold()
+            .padding(.horizontal, 16)
+            .padding(.vertical, 8)
+            .background(Color.white.opacity(0.8))
+            .cornerRadius(12)
+            .shadow(radius: 4)
+        } else {
+          Text("Spin the Wheel")
+            .font(.headline)
+            .foregroundColor(.secondary)
+        }
+      }
       
-      // Wheel + arrow
       ZStack {
-        WheelView(choices: choices)
+        // Gradient card background
+        RoundedRectangle(cornerRadius: 20)
+          .fill(
+            LinearGradient(
+              gradient: Gradient(colors: [Color.blue.opacity(0.3), Color.purple.opacity(0.3)]),
+              startPoint: .topLeading,
+              endPoint: .bottomTrailing
+            )
+          )
+          .frame(width: 340, height: 340)
+          .shadow(radius: 5)
+        
+        // Wheel segments
+        Wheel(choices: choices)
           .rotationEffect(.degrees(spinAngle))
           .animation(.easeOut(duration: 3), value: spinAngle)
+          .frame(width: 300, height: 300)
+        
+        // Arrow indicator
         Arrow()
       }
-      .frame(width: 300, height: 300)
-      .onAppear {
-        feedback.prepare()
-        guard !hasSpunOnAppear else { return }
-        hasSpunOnAppear = true
-        spinWheel()
-      }
       
-      Button("Spin") {
-        spinWheel()
+      // Spin button
+      Button(action: spinWheel) {
+        Text("Spin")
+          .font(.headline)
+          .padding()
+          .frame(maxWidth: .infinity)
+          .background(choices.isEmpty ? Color.gray.opacity(0.5) : Color.accentColor)
+          .foregroundColor(.white)
+          .cornerRadius(12)
       }
       .buttonStyle(ScaleButtonStyle())
-      .padding()
       .disabled(choices.isEmpty)
-      
-      if let choice = selection {
-        NavigationLink(
-          destination: ResultView(choice: choice),
-          isActive: .constant(true)
-        ) { EmptyView() }
-      }
     }
-    .navigationBarTitle("Spinner", displayMode: .inline)
-    .onChange(of: selection) { newValue in
-      guard newValue != nil else { return }
-      feedback.impactOccurred()
+    .padding()
+    .onAppear {
+      feedback.prepare()
+      guard !hasSpunOnAppear else { return }
+      hasSpunOnAppear = true
+      spinWheel()
+    }
+    .onChange(of: selection) { new in
+      if new != nil { feedback.impactOccurred() }
     }
   }
   
@@ -246,17 +263,8 @@ struct SpinnerView: View {
   }
 }
 
-// MARK: - Custom Button Style
-struct ScaleButtonStyle: ButtonStyle {
-  func makeBody(configuration: Configuration) -> some View {
-    configuration.label
-      .scaleEffect(configuration.isPressed ? 0.95 : 1)
-      .animation(.easeOut(duration: 0.2), value: configuration.isPressed)
-  }
-}
-
-
-struct WheelView: View {
+// MARK: - Wheel Shape
+struct Wheel: View {
   let choices: [String]
   var body: some View {
     GeometryReader { g in
@@ -278,6 +286,7 @@ struct WheelView: View {
         .fill(Color(hue: Double(i) / Double(choices.count), saturation: 0.7, brightness: 0.9))
         
         Text(choices[i])
+          .font(.caption)
           .position(
             x: center.x + cos(step * (Double(i) + 0.5) - .pi/2) * (r * 0.7),
             y: center.y + sin(step * (Double(i) + 0.5) - .pi/2) * (r * 0.7)
@@ -287,6 +296,7 @@ struct WheelView: View {
   }
 }
 
+// MARK: - Arrow Indicator
 struct Arrow: View {
   var body: some View {
     Triangle()
@@ -307,30 +317,11 @@ struct Triangle: Shape {
   }
 }
 
-struct ResultView: View {
-  let choice: String
-  @Environment(\.presentationMode) private var presentation
-  
-  var body: some View {
-    VStack(spacing: 20) {
-      Text("Result: \(choice)")
-        .font(.largeTitle)
-      
-      HStack {
-        Button("Respin") {
-          presentation.wrappedValue.dismiss()
-        }
-        Spacer()
-        Button("Home") {
-          presentation.wrappedValue.dismiss()
-          DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            presentation.wrappedValue.dismiss()
-          }
-        }
-      }
-      .padding()
-    }
-    .navigationTitle("Result")
+// MARK: - Custom Button Style
+struct ScaleButtonStyle: ButtonStyle {
+  func makeBody(configuration: Configuration) -> some View {
+    configuration.label
+      .scaleEffect(configuration.isPressed ? 0.95 : 1)
+      .animation(.easeOut(duration: 0.2), value: configuration.isPressed)
   }
 }
-
